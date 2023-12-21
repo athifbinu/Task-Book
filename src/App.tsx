@@ -1,24 +1,35 @@
 import { useState } from "react";
 import "./App.css";
 import Imageheader from "./components/Imageheader";
+import Input from "./components/Input";
+
+
+type Items={
+      title:string;
+      id:string;
+}
 
 function App() {
-  const [Items, setItems] = useState<string[]>(["sad", "sad"]);
+  const [Items, setItems] = useState<Items[]>([]);
   const [inputValue, setInputvalues] = useState<string>("");
 
   const handlesubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    setItems((prev) => [...prev, inputValue]);
+    setItems((prev) => [...prev, {title:inputValue,id:Date.now().toString()}]);
     setInputvalues("");
+  };
+
+  const handledelete = (id: string) => {
+    setItems((prev) => prev.filter((data) => data.id !== id));
   };
 
   return (
     <div>
       <Imageheader />
 
-      <form action="" onSubmit={handlesubmit}>
+      <form onSubmit={handlesubmit}>
         <div>
-          <input type="text" className="border " />
+           <Input inputValue={inputValue} setInputvalues={setInputvalues}/>
         </div>
 
         <div>
@@ -28,13 +39,13 @@ function App() {
 
       <div>
         {Items.map((data) => (
-          <div key={data} className="flex">
+          <div key={data.id} className="flex">
             <div>
-              <p>{data}</p>
+              <p>{data.title}</p>
             </div>
 
             <div>
-              <button>Delete</button>
+              <button onClick={() => handledelete(data.id)}>Delete</button>
             </div>
           </div>
         ))}
